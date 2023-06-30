@@ -34,6 +34,7 @@ from viktor.parametrization import (
     TableInput,
     Text,
     TextField,
+    LineBreak
 )
 
 from .constants import (
@@ -42,6 +43,15 @@ from .constants import (
     DEFAULT_ROBERTSON_TABLE,
     DEFAULT_SOIL_NAMES,
     MAX_CONE_RESISTANCE_TYPE,
+    Pile_Class,
+    Pile_Bore_Category,
+    Pile_CFA_Category,
+    Pile_Screw_Category,
+    Pile_Closed_Driven_Category,
+    Pile_Open_Driven_Category,
+    Pile_Driven_H_Category,
+    Pile_Driven_Sheet_Category,
+    Pile_Micro_piles_Category
 )
 
 CLASSIFICATION_METHODS = [
@@ -186,4 +196,150 @@ Classify the uploaded GEF file by clicking the "Classify soil layout" button. Pr
     cpt.measurement_data = HiddenField("GEF Measurement data", name="measurement_data")
     cpt.soil_layout_original = HiddenField("Soil layout original", name="soil_layout_original")
 
-    final_step = Step("What's next?", views="final_step")
+    PILE = Step("Pile Capacity Design",views=["visualize_pile"])
+
+    PILE.text_02 = Text(
+        """## Select your pile geometry
+        """
+    )
+
+    PILE.Diameter = NumberField(
+        "Pile Diameter (m)",
+        default=1,
+        min=0.5,
+        step=0.5,
+        max=3,
+        # flex=33,
+        variant='slider'
+    )
+
+    PILE.Length = NumberField(
+        "Pile Length (m)",
+        default=10,
+        min=3,
+        step=0.2,
+        max=50,
+        # flex=33,
+        variant='slider'
+    )
+
+    PILE.Load = NumberField(
+        "Pile Load Required (MPa)",
+        default=30,
+        min=10,
+        step=2,
+        max=50,
+        # flex=33,
+        variant='slider'
+    )
+    PILE.lb = LineBreak()  # split the fields in 2 pairs
+    PILE.text_0 = Text(
+        """## Select your pile class
+
+Select your preferred pile types 
+        """
+    )
+    PILE.method = OptionField(
+        "Pile Class",
+        options=Pile_Class,
+        default="Bore",
+        autoselect_single_option=True,
+        variant="radio-inline",
+        description="Different pile classes.",
+    )
+
+    PILE.text_01 = Text(
+        """## Select your pile category
+
+Select your preferred pile category based on the selected pile class
+        """
+    )
+    PILE.bore_category = OptionField(
+        "Bored Pile category",
+        options=Pile_Bore_Category,
+        default="No support",
+        autoselect_single_option=True,
+        variant="radio-inline",
+        description="Different pile category.",
+        # flex=33,
+        visible=IsEqual(Lookup("PILE.method"), "Bore")
+    )
+
+    PILE.CFA_category = OptionField(
+        "CFA Pile category",
+        options=Pile_CFA_Category,
+        default="CFA piles",
+        autoselect_single_option=True,
+        variant="radio-inline",
+        description="Different pile category.",
+        # flex=33,
+        visible=IsEqual(Lookup("PILE.method"), "CFA")
+    )
+
+    PILE.Screw_category = OptionField(
+        "Screw Pile category",
+        options=Pile_Screw_Category,
+        variant="radio-inline",
+        default="cast-in",
+        autoselect_single_option=True,
+        description="Different pile category.",
+        # flex=33,
+        visible=IsEqual(Lookup("PILE.method"), "Screw")
+    )
+
+    PILE.Closed = OptionField(
+        "Pile Closed Driven Category",
+        options=Pile_Closed_Driven_Category,
+        variant="radio-inline",
+        default="pre",
+        autoselect_single_option=True,
+        description="Different pile category.",
+        # flex=33,
+        visible=IsEqual(Lookup("PILE.method"), "Closed")
+    )
+
+    PILE.Open = OptionField(
+        "Open-ended driven piles Category",
+        options=Pile_Open_Driven_Category,
+        variant="radio-inline",
+        default="steel",
+        autoselect_single_option=True,
+        description="Different pile category.",
+        # flex=33,
+        visible=IsEqual(Lookup("PILE.method"), "Open")
+    )
+
+    PILE.H = OptionField(
+        "Driven H piles",
+        options=Pile_Driven_H_Category,
+        variant="radio-inline",
+        default="driven",
+        autoselect_single_option=True,
+        description="Different pile category.",
+        # flex=33,
+        visible=IsEqual(Lookup("PILE.method"), "H")
+    )
+
+    PILE.Sheet = OptionField(
+        "Driven sheet pile walls",
+        options=Pile_Driven_Sheet_Category,
+        variant="radio-inline",
+        default="sheet",
+        autoselect_single_option=True,
+        description="Different pile category.",
+        # flex=33,
+        visible=IsEqual(Lookup("PILE.method"), "sheet")
+    )
+
+    PILE.Micro = OptionField(
+        "Micropiles",
+        options=Pile_Micro_piles_Category,
+        variant="radio-inline",
+        default="gravity",
+        autoselect_single_option=True,
+        description="Different pile category.",
+        # flex=33,
+        visible=IsEqual(Lookup("PILE.method"), "Micro")
+    )
+
+

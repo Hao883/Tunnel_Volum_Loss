@@ -14,6 +14,64 @@ SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from viktor.parametrization import ViktorParametrization, Step, TextField, NumberField,OptionField, OptionListElement
+
+Pile_Class = [
+    OptionListElement(label="Bore piles", value="Bore"),
+    OptionListElement(label="CFA piles", value="CFA"),
+    OptionListElement(label="Screw piles", value="Screw"),
+    OptionListElement(label="Closed-ended driven piles", value="Closed"),
+    OptionListElement(label="Open-ended driven piles", value="Open"),
+    OptionListElement(label="Driven H piles", value="H"),
+    OptionListElement(label="Driven sheet pile walls", value="sheet"),
+    OptionListElement(label="Micro piles", value="Micro"),
+]
+Pile_Bore_Category = [
+    OptionListElement(label="No support", value="No support"),
+    OptionListElement(label="With Slurry", value="With Slurry"),
+    OptionListElement(label="Permanent casing", value="Permanent casing"),
+    OptionListElement(label="Recoverable casing", value="Recoverable casing"),
+    OptionListElement(label="Dry bored pile or slurry", value="Dry bored pile or slurry"),
+    OptionListElement(label="With grooved sockets", value="With grooved sockets"),
+
+]
+
+Pile_CFA_Category = [
+    OptionListElement(label="CFA piles", value="CFA piles")
+
+]
+
+Pile_Screw_Category = [
+    OptionListElement(label="Screw cast-in-place pile", value="cast-in"),
+    OptionListElement(label="Screw piles with casing", value="casing")
+]
+
+Pile_Closed_Driven_Category = [
+    OptionListElement(label="Pre-cast or pre-stressed concrete-driven pile", value="pre"),
+    OptionListElement(label="Coated driven steel pile (coating: concrete, mortar, grout)", value="coated"),
+    OptionListElement(label="Driven cast-in-place pile", value="cast-in-place"),
+    OptionListElement(label="Driven steel pile, closed ended", value="steel")
+]
+
+Pile_Open_Driven_Category = [
+    OptionListElement(label="Driven steel pile, open ended", value="steel")
+]
+
+Pile_Driven_H_Category = [
+    OptionListElement(label="Driven H pile", value="driven"),
+    OptionListElement(label="Driven grouted H pile", value="grouted")
+]
+
+Pile_Driven_Sheet_Category = [
+    OptionListElement(label="Driven sheet pile", value="sheet")
+]
+
+Pile_Micro_piles_Category = [
+    OptionListElement(label="Micropile I (gravity pressure)", value="gravity"),
+    OptionListElement(label="Micropile II low pressure)", value="low"),
+    OptionListElement(label="Micropile II high pressure)", value="high"),
+    OptionListElement(label="Micropile IV high pressure)", value="TAM")
+]
 
 DEFAULT_MIN_LAYER_THICKNESS = 200
 

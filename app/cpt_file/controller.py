@@ -1,19 +1,3 @@
-"""Copyright (c) 2022 VIKTOR B.V.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
-persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
-Software.
-
-VIKTOR B.V. PROVIDES THIS SOFTWARE ON AN "AS IS" BASIS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
-SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
-CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-"""
 from pathlib import Path
 
 from munch import Munch, unmunchify
@@ -30,6 +14,8 @@ from viktor.views import (
     MapView,
     PlotlyAndDataResult,
     PlotlyAndDataView,
+    PlotlyView,
+    PlotlyResult,
     WebResult,
     WebView,
 )
@@ -42,6 +28,7 @@ from .soil_layout_conversion_functions import (
     convert_soil_layout_to_input_table_field,
 )
 from .visualisation import visualise_cpt
+from .visualisation import visualise_pile
 
 
 class CPTFileController(ViktorController):
@@ -78,9 +65,59 @@ class CPTFileController(ViktorController):
     @PlotlyAndDataView("CPT interpretation", duration_guess=3)
     def visualize_cpt(self, params: Munch, **kwargs) -> PlotlyAndDataResult:
         """Visualizes the Qc and Rf line plots, the soil layout bar plots and the data of the cpt."""
-        fig = visualise_cpt(cpt_params=params)
+        # fig = visualise_cpt(cpt_params=params)
+        fig = visualise_cpt(params)
+
         data_group = self.get_data_group(params)
         return PlotlyAndDataResult(fig.to_json(), data=data_group)
+
+    @PlotlyView("Pile Design", duration_guess=1)
+    def visualize_pile(self, params: Munch, **kwargs) -> PlotlyResult:
+        # fig = visualise_pile(cpt_params=params)
+        fig = visualise_pile(params, params)
+
+        data_group = self.get_data_group(params)
+        return PlotlyResult(fig.to_json())
+        # cpt_entity = params.step_1.cpt.cpt_selection
+        # cpt_instance = CPT(cpt_params=cpt_entity.last_saved_params, soils=DEFAULT_ROBERTSON_TABLE,
+        #                    entity_id=cpt_entity.id)
+        # surface_level = cpt_instance.params['soil_layout'][0]["top_of_layer"]
+        # input_xml, input_def, input_esa, scia_model = generate_scia_input(params)
+        # input_xml_content = serialize_file_to_string(input_xml)
+        # input_def_content = serialize_file_to_string(input_def)
+        # input_esa_content = serialize_file_to_string(input_esa)
+        # scia_result = run_scia(input_xml_content, input_def_content, input_esa_content)
+        # scia_result = deserialize_string_to_file(scia_result)
+        # _, max_rz = scia_parser(scia_model, scia_result, params)
+        # foi_file = generate_dfoundations_input(params)
+        # fod_file_content = run_dfoundations(foi_file.getvalue())
+        # parsed_results = dfoundations_parser(fod_file_content)
+        # closest_bearing_strength = min(parsed_results["Bearing Strength GT1B"], key=lambda x: abs(x - max_rz))
+        # index_closest_bearing_strength = parsed_results["Bearing Strength GT1B"].index(closest_bearing_strength)
+        # required_pile_tip_level = parsed_results["Depth"][index_closest_bearing_strength]
+        # data_result = DataGroup(
+        #     DataItem('Max Reaction Force', max_rz, suffix='N', number_of_decimals=1),
+        #     DataItem('Required Pile Tip Level', required_pile_tip_level, suffix='m', number_of_decimals=1),
+        #     DataItem('Required Pile Length', required_pile_tip_level - surface_level, suffix='m',
+        #              number_of_decimals=1)
+        # )
+        #
+        # fig = go.Figure(
+        #     data=[
+        #         go.Line(x=parsed_results["Bearing Strength GT1B"], y=parsed_results["Depth"],
+        #                 name="Bearing Strength")],
+        #     layout=go.Layout(  # title=go.layout.Title(text="Intersection"),
+        #         xaxis=go.layout.XAxis(title="Force [N]"),
+        #         yaxis=go.layout.YAxis(title="Depth [m]"))
+        # )
+        # fig.add_trace(go.Line(name="Reaction Force",
+        #                       x=max_rz * np.ones(100),
+        #                       y=np.linspace(min(parsed_results["Depth"]), 0, 100)))
+        # fig.add_trace(go.Line(name="Required Pile Tip Level",
+        #                       x=np.linspace(min(parsed_results["Bearing Strength GT1B"]),
+        #                                     max(parsed_results["Bearing Strength GT1B"]), 100),
+        #                       y=np.ones(100) * required_pile_tip_level))
+        # return PlotlyAndDataResult(fig.to_json(), data_result)
 
     @MapView("Map", duration_guess=2)
     def visualize_map(self, params: Munch, **kwargs) -> MapResult:
